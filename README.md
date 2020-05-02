@@ -2,11 +2,11 @@
 switch bourd with timer for raspberry pi   inclusive clock timer 
 I have yet more work to do on this  Fully functional up to now  though 
 
-
+Done for model RPI3 B + 
 
 Setting  of the switch broad itself 
 
-1: make a directory on your SD car on the Raspberry  and call this  switchboard 
+1: make a directory on your SD card on the Raspberry  and call this  switchboard 
 2: CD into this folder an either download all via  clone  or use  git clone https://github.com/markh2016/switchboard.git Alternatively  down load in zip format and  unzip contents to that folder 
 
 3 : Although the executable is  pre compiled  I would run  the command “ make clean  from terminal in that directory    then run make  This will produce the required excitable 
