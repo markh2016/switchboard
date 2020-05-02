@@ -18,19 +18,30 @@ The  BCM Pins for all led’s are marked and commented in full  in the C file
 These are marked under this section as listed below  in the SRC  folder 
 
 #define PIN0 RPI_GPIO_P1_11		// gpio_0 pin 11
+
+
 #define PIN1 RPI_GPIO_P1_12		// gpio_1 pin 12
+
 #define PIN2 RPI_GPIO_P1_13		// gpio_2 this is on pin21 
+
 #define PIN3 RPI_GPIO_P1_15		// gpio_3 pin 15
+
 #define PIN4 RPI_GPIO_P1_16		// gpio_4 pin 16
+
 #define PIN5 RPI_GPIO_P1_18		// gpio_5 pin 18
 
-The related directly to the break out board which Im using correctly for prototyping 
+
+The related directly to the break out board which Im using correctly for prototyping
+
 
 This  you can find at this location 
+
  
 https://shop.cyntech.co.uk/collections/raspberry-pi/products/40-way-raspberry-pi-b-split
 
 
-In the meantime enjoy  and have fun  
 
-Mark Harrington
+In the meantime enjoy  and have fun 
+
+
+Mark Harrington 01:59Hrs  02 May 2020
