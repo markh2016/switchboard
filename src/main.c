@@ -22,7 +22,7 @@ gint delay = -1 ;
 guint seconds = 0 ; 
 guint timerId = 0; 
 
-
+guint switch_count = 0 ;
 
 GtkWidget 	*lbl_time  = NULL ;
 GtkWidget 	*btnUpdate = NULL ;
@@ -58,6 +58,7 @@ GtkWidget	*sw5 = NULL ;
 
 GtkImage    *image = NULL   ;
 gboolean    running  = FALSE ; 
+gboolean    alarmtrig =FALSE ; // tells us when alram triiggered 
 
 // The states of each switch 
 gboolean    states[6] ; 
@@ -97,8 +98,8 @@ gboolean timerTick(__attribute__((unused)) gpointer userData)
 {   
 	
     
-    //const gchar *alarmtext  ;
-    //const gchar *currenttime ; 
+   const gchar *alarmtext  ;
+   const gchar *currenttime ; 
     
     char temp[9]; 
     struct tm *now_tm;
@@ -120,24 +121,51 @@ gboolean timerTick(__attribute__((unused)) gpointer userData)
 			gtk_label_set_text(GTK_LABEL(lbl_time), temp); 
 			
 			    
-                //UPDATE LABEL			 
+            // get values of alarmtext , currenttime	 
 				
-				
-				
+			currenttime = gtk_label_get_text(GTK_LABEL(lbl_time)) ;
+			
 				
 				if(running)
 				{
-					// compare time strings 
-					// get the alarm text 
+					// compare time strings for equality 
+				   alarmtext   = gtk_label_get_text(GTK_LABEL(lbl_alarm)) ;	
 				   
 				    
-				    // now compare for equality 
-				    /*if (g_strcmp0(alarmtext, currenttime) == 0){
+				    //  compare 
+				    if (g_strcmp0(alarmtext, currenttime) == 0){
 					g_print("Alarm activated  alarm is %s  Time is %s\n" , alarmtext ,currenttime ) ;
 					gtk_image_set_from_file(GTK_IMAGE(alarmImage), "icons/Blue.ico"); 
+					alarmtrig = TRUE ;
 					gtk_label_set_text(GTK_LABEL(lbStatus), "Alarm Off" );  
 					running = FALSE ; 
-				    }*/
+				    }
+				}
+				
+				if (alarmtrig)
+				{
+					switch(switch_count)
+					{
+					case 0 :
+						gtk_switch_set_active(GTK_SWITCH(sw0),TRUE);
+							switch_count+=1 ;
+						break ;
+					case 1: 
+							gtk_switch_set_active(GTK_SWITCH(sw1),TRUE);
+								switch_count+=1 ;
+						break ;
+							
+				    case 2: 
+						gtk_switch_set_active(GTK_SWITCH(sw2),TRUE);
+								switch_count+=1 ;
+						break ;
+					
+					default :
+					    switch_count=0 ;
+					    alarmtrig = FALSE ;
+					    g_print("switch count  = %d \n" ,switch_count) ;
+					
+					}// end switch case 
 				}
 				
 	return TRUE;
@@ -156,7 +184,7 @@ void on_destroy (__attribute__((unused)) GtkWidget *widget,__attribute__((unused
 void on_BtnAlarm_Off_clicked (__attribute__((unused)) GtkWidget *widget,__attribute__((unused)) gpointer data )
 {
 	 char status[10] = "Alarm Off" ;
-	  // g_print("%s called.\n",__FUNCTION__); debug 
+	 
 	 gtk_image_set_from_file(GTK_IMAGE(alarmImage), "icons/off.ico"); 
 	 
 	 gtk_label_set_text(GTK_LABEL(lbStatus), status);  
@@ -180,7 +208,7 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
     gdouble f_delay = 0.0 ; 
     
     
-	// g_print("%s called.\n",__FUNCTION__); debugging code 
+	
 	hrs 	= gtk_spin_button_get_value(GTK_SPIN_BUTTON(spinhrs)) ;
 	mins 	= gtk_spin_button_get_value(GTK_SPIN_BUTTON(spinmins)) ;
 	secs 	= gtk_spin_button_get_value(GTK_SPIN_BUTTON(spinsecs)) ;
@@ -198,7 +226,7 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 
 	gboolean  on_id_sw5_state_set (__attribute__((unused))GtkSwitch *id_sw5,__attribute__((unused)) gpointer user_data)
 	{
-		g_print("%s called.\n",__FUNCTION__);// debug 
+		
 		
 	    states[5] = gtk_switch_get_active(GTK_SWITCH(id_sw5)) ;
 	    if(states[5])
@@ -213,14 +241,14 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 		         }
 				 
 				 
-	    g_print("State 5 = %d \n" , states[5]) ;
+	    //g_print("State 5 = %d \n" , states[5]) ;
 	    	    
 		return TRUE ; 
 	} 
 
 	gboolean on_id_sw4_state_set (__attribute__((unused))GtkSwitch *id_sw4, __attribute__((unused))gpointer user_data)
 	{
-		debug(__FUNCTION__);
+		//debug(__FUNCTION__);
 		
 	    states[4] = gtk_switch_get_active(GTK_SWITCH(id_sw4)) ;
 	        
@@ -235,13 +263,13 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 			    bcm2835_gpio_write(PIN4, LOW); 
 			}	 
 	        
-		g_print("State 4 = %d \n" , states[4]) ;
+		// g_print("State 4 = %d \n" , states[4]) ;
 		return TRUE ; 
 	}
 
 	gboolean on_id_sw3_state_set (__attribute__((unused))GtkSwitch *id_sw3, __attribute__((unused))gpointer user_data)
 	{
-		debug(__FUNCTION__);
+		//debug(__FUNCTION__);
 		
 	    states[3] = gtk_switch_get_active(GTK_SWITCH(id_sw3)) ;
 		
@@ -255,13 +283,13 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 				 bcm2835_gpio_write(PIN3, LOW);
 			}
 			
-		g_print("State 3 = %d \n" , states[3]) ;
+		// g_print("State 3 = %d \n" , states[3]) ;
 		return TRUE ; 
 	}
 
 	gboolean on_id_sw2_state_set (__attribute__((unused))GtkSwitch *id_sw2, __attribute__((unused))gpointer user_data)
 	{
-		debug(__FUNCTION__);
+		//debug(__FUNCTION__);
 		
 	    states[2] = gtk_switch_get_active(GTK_SWITCH(id_sw2)) ;
 	    
@@ -269,12 +297,12 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 	     {
 	        gtk_image_set_from_file(GTK_IMAGE(Rm3Status), "icons/On.ico"); 
 		bcm2835_gpio_write(PIN2, HIGH);
-		g_print("State 2 = %d \n" , states[2]) ;
+		
 	      }
 	           else {
 				 gtk_image_set_from_file(GTK_IMAGE(Rm3Status), "icons/off.ico"); 
 				 bcm2835_gpio_write(PIN2, LOW);
-			         g_print("State 2 = %d \n" , states[2]) ;
+			        // g_print("State 2 = %d \n" , states[2]) ;
 			}
 	    
 	   
@@ -283,7 +311,7 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
  
 	gboolean on_id_sw1_state_set (__attribute__((unused))GtkSwitch *id_sw1, __attribute__((unused))gpointer user_data)
 	{  
-		debug(__FUNCTION__);
+		//debug(__FUNCTION__);
 		
 		states[1] = gtk_switch_get_active(GTK_SWITCH(id_sw1)) ;
 		
@@ -298,14 +326,14 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 		   }
 				 
 		
-		g_print("State 1 = %d \n" , states[1]) ;
+		//g_print("State 1 = %d \n" , states[1]) ;
 	 
 		return TRUE ;  
 	}
   
 	gboolean on_id_sw0_state_set (__attribute__((unused))GtkSwitch *id_sw0,__attribute__((unused)) gpointer user_data)
 	{   
-		debug(__FUNCTION__);
+		//debug(__FUNCTION__);
 		
 		states[0] = gtk_switch_get_active(GTK_SWITCH(id_sw0)) ;
 		
@@ -324,7 +352,7 @@ void on_btnupdate_clicked (__attribute__((unused))GtkButton *btnupdate,__attribu
 		
 		
 		
-		g_print("State 0 = %d \n" , states[0]) ;
+		//g_print("State 0 = %d \n" , states[0]) ;
 		
 		return TRUE ; 
 	}
